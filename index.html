@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Greyer - Functional E-commerce Platform</title>
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Stars background */
+        .stars {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        /* --- HERO SECTION STYLES --- */
+        #hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+
+        .main-logo-container {
+            transition: all 0.6s ease;
+            width: 400px;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        
+        .main-logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            mix-blend-mode: lighten;
+        }
+
+        .hero-tagline {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            font-weight: 300;
+            letter-spacing: 5px;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+        }
+
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.0); /* Initially transparent */
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 1rem 5%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.2rem;
+            font-weight: 400;
+            letter-spacing: 3px;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            mix-blend-mode: lighten;
+        }
+
+        nav.scrolled .logo-icon {
+            width: 35px;
+            height: 35px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a, .nav-links button {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-weight: 300;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            transition: color 0.3s ease;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .nav-links a:hover, .nav-links button:hover {
+            color: #ffffff;
+        }
+        
+        /* Cart Button Styling */
+        #cartButton {
+            font-size: 1.2rem;
+            padding: 0.5rem;
+        }
+
+        /* Sections */
+        .page-section {
+            position: relative;
+            min-height: 50vh; /* Reduced from 100vh since Hero is 100vh */
+            padding: 6rem 5% 8rem 5%; /* Adjusted top padding */
+            z-index: 1;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 300;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            color: #ffffff;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 300;
+            margin-bottom: 5rem;
+            letter-spacing: 2px;
+            font-size: 1rem;
+        }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .product-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .product-title {
+            font-size: 1.3rem;
+            font-weight: 400;
+            margin-bottom: 0.75rem;
+            letter-spacing: 1px;
+            color: #ffffff;
+        }
+
+        .product-description {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            font-weight: 300;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: #ffffff;
+        }
+
+        /* Admin Form Styles (Adjusted for general use) */
+        .admin-form {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-form input, .admin-form textarea {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            color: #ffffff;
+            font-size: 1rem;
+        }
+
+        .admin-form textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .primary-button {
+            background: #ffffff;
+            color: #000000;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .primary-button:hover {
+            background: #cccccc;
+        }
+
+        .category-filters {
+            text-align: center;
+            margin-bottom: 3rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .category-filters button {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            margin: 0.25rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        .category-filters button.active, .category-filters button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border-color: #ffffff;
+        }
+        
+        /* Product Detail Page Styles */
+        #productDetail {
+            display: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 5rem;
+        }
+
+        .detail-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4rem;
+            padding: 4rem 0;
+            align-items: flex-start;
+        }
+
+        .detail-image-box {
+            flex: 1 1 450px;
+            min-height: 450px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10rem;
+        }
+
+        .detail-info {
+            flex: 1 1 400px;
+            padding-top: 2rem;
+        }
+
+        .detail-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 400;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+        }
+
+        .detail-price {
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: #ffffff;
+            margin-bottom: 2rem;
+        }
+
+        .detail-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 3rem;
+        }
+
+        .detail-category {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        /* Cart Modal Styles */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cart-modal {
+            background: #000000;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .cart-modal h2 {
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .item-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .item-title {
+            font-weight: 400;
+        }
+
+        .item-details {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .item-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .remove-button {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.5);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .remove-button:hover {
+            color: #ffffff;
+            border-color: #ffffff;
+        }
+
+        .cart-summary {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 1.2rem;
+            font-weight: 400;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .cart-actions {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        
+        .checkout-button {
+            flex-grow: 1;
+        }
+        
+        .clear-cart-button {
+            background: none;
+            color: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .close-modal-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: flex;
+            }
+
+            .main-logo-container {
+                width: 300px;
+                height: 300px;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .detail-container {
+                gap: 2rem;
+                padding: 2rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Stars Background -->
+    <div class="stars" id="starsContainer"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="logo" onclick="window.location.hash = '#products';">
+            <div class="logo-icon">
+                <img src="https://raw.githubusercontent.com/bravenqts-hash/the-greyer-assets/main/image_1759507308710.jpeg" alt="The Greyer">
+            </div>
+            THE GREYER
+        </div>
+        <ul class="nav-links">
+            <li><a href="#products">PRODUCTS</a></li>
+            <li><a href="#about">ABOUT</a></li>
+            <li><a href="#contact">CONTACT</a></li>
+            <li><button id="adminButton" style="display: none;">ADMIN</button></li>
+            <li><button id="cartButton" aria-label="Open Shopping Cart">🛒 (<span id="cartCount">0</span>)</button></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content Container for SPA -->
+    <div id="appContent">
+        
+        <!-- --- NEW HERO SECTION --- -->
+        <section id="hero">
+            <div class="main-logo-container">
+                <img src="https://raw.githubusercontent.com/bravenqts-hash/the-greyer-assets/main/image_1759507308710.jpeg" alt="The Greyer Logo">
+            </div>
+            <h1 class="hero-tagline">FUTURE IS SUBTLE</h1>
+        </section>
+
+
+        <!-- Products Section (Product Grid) -->
+        <section class="page-section" id="products" style="padding-top: 8rem;">
+            <h2 class="section-title">Featured Collection</h2>
+            <p class="section-subtitle">Neo-futuristic technology</p>
+            
+            <!-- Category Filter Area -->
+            <div class="category-filters" id="categoryFilters">
+                <!-- Dynamic filter buttons will be rendered here -->
+            </div>
+
+            <!-- Dynamic Product Grid -->
+            <div class="product-grid" id="productGrid">
+                <!-- Products dynamically loaded from Firestore will appear here -->
+                <p style="text-align: center; color: rgba(255, 255, 255, 0.4);" id="loadingMessage">
+                    Loading the future...
+                </p>
+            </div>
+        </section>
+
+        <!-- Product Detail Section (Dynamically Rendered) -->
+        <section class="page-section" id="productDetail" style="display: none; padding-top: 8rem;">
+            <!-- Content will be injected by renderProductDetail(id) -->
+        </section>
+
+        <!-- Admin Panel (Initially Hidden) -->
+        <section class="page-section" id="adminPanel" style="display: none; min-height: 50vh; padding-top: 8rem;">
+            <h2 class="section-title">Product Admin</h2>
+            <p class="section-subtitle">Add a new item to the collection.</p>
+            
+            <form class="admin-form" id="addProductForm">
+                <input type="text" id="productTitle" placeholder="Product Title (e.g., Quantum Watch)" required>
+                <textarea id="productDescription" placeholder="Description (e.g., Biometric wellness tracking...)" required></textarea>
+                <input type="number" id="productPrice" placeholder="Price (e.g., 449)" required min="0" step="0.01">
+                <input type="text" id="productCategory" placeholder="Category (e.g., Wearables, Audio)" required>
+                <input type="text" id="productIcon" placeholder="Emoji/Icon (e.g., 💍, 🎧)" required maxlength="2">
+                <button type="submit" class="primary-button">Add Product</button>
+                <p id="formMessage" style="color: red; margin-top: 1rem;"></p>
+            </form>
+        </section>
+
+        <!-- Placeholder Sections for scrolling to #about and #contact -->
+        <section id="about" class="page-section" style="min-height: 50vh; padding-top: 5rem;">
+            <h2 class="section-title">The Philosophy</h2>
+            <p class="section-subtitle" style="margin-bottom: 2rem;">Designing the future, one byte at a time.</p>
+            <p style="max-width: 800px; margin: 0 auto; text-align: center; color: rgba(255, 255, 255, 0.7); line-height: 1.8;">
+                The Greyer exists at the intersection of minimal design and maximal capability. We strip away the unnecessary noise
+                to reveal the core potential of technology. Our products aren't just tools; they are seamless extensions of thought,
+                crafted for a world where interfaces disappear and utility becomes instinctual. We believe the future should feel clean, quiet, and profoundly capable.
+            </p>
+        </section>
+
+        <section id="contact" class="page-section" style="min-height: 50vh; padding-top: 5rem;">
+            <h2 class="section-title">Connect</h2>
+            <p class="section-subtitle" style="margin-bottom: 2rem;">Reach out to our matrix.</p>
+            <div style="max-width: 400px; margin: 0 auto; text-align: center;">
+                <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 1rem;">
+                    Inquiries: <a href="mailto:info@thegreyer.com" style="color: #ffffff; text-decoration: none; border-bottom: 1px dashed rgba(255, 255, 255, 0.5);">info@thegreyer.com</a>
+                </p>
+                <p style="color: rgba(255, 255, 255, 0.7);">
+                    Support: <a href="mailto:support@thegreyer.com" style="color: #ffffff; text-decoration: none; border-bottom: 1px dashed rgba(255, 255, 255, 0.5);">support@thegreyer.com</a>
+                </p>
+            </div>
+        </section>
+
+    </div>
+    
+    <!-- Cart Modal (Hidden by default) -->
+    <div class="modal-backdrop" id="cartModal">
+        <div class="cart-modal">
+            <button class="close-modal-button" onclick="closeCart();">✕</button>
+            <h2>Shopping Cart</h2>
+            <div id="cartItemsContainer">
+                <!-- Cart items will be rendered here -->
+            </div>
+            <div class="cart-summary">
+                <span>Subtotal:</span>
+                <span id="cartSubtotal">$0.00</span>
+            </div>
+            <div class="cart-actions">
+                <button class="primary-button checkout-button" onclick="handleCheckout();">Proceed to Checkout</button>
+                <button class="primary-button clear-cart-button" onclick="clearCart();">Clear Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>THE GREYER © 2025 · NEO-FUTURISTIC DREAM VIBE</p>
+    </footer>
+
+    <!-- Firebase SDK Imports -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, addDoc, serverTimestamp, query, getDocs, limit } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- GLOBAL STATE & CONSTANTS ---
+        let db, auth, userId = null;
+        let allProducts = [];
+        let currentFilter = 'All';
+        // Cart state: array of { product, quantity }
+        let cart = []; 
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        const PRODUCTS_COLLECTION_PATH = `/artifacts/${appId}/public/data/products`;
+
+        const SAMPLE_PRODUCTS = [
+            {
+                title: "The Chronos Ring",
+                description: "Seamless biometric tracking and minimalist notification system. Machined titanium shell. Features include 24/7 heart rate, sleep cycles, and galvanic skin response monitoring, all synchronized to our secure cloud matrix.",
+                price: 349.00,
+                category: "Wearables",
+                icon: "💍"
+            },
+            {
+                title: "EchoSphere Headphones",
+                description: "Active noise-cancellation with zero-latency audio transfer. Adaptive sound profiles adjust automatically to your environment, providing crystal-clear sound isolation or full environmental pass-through on demand.",
+                price: 499.00,
+                category: "Audio",
+                icon: "🎧"
+            },
+            {
+                title: "Lumina Desk Mat",
+                description: "Integrated inductive charging surface and adaptive ambient light control for ergonomic workspaces. Mat surface is self-cleaning and resists static build-up, ensuring maximum operational efficiency.",
+                price: 129.50,
+                category: "Accessories",
+                icon: "💻"
+            },
+            {
+                title: "Aura Diffuser",
+                description: "Ultra-quiet, programmable essential oil diffusion paired with atmospheric light cycles. Ceramic finish. Uses minimal power while maintaining optimal air quality and subtle environmental scent profiling.",
+                price: 189.00,
+                category: "Home",
+                icon: "🕯️"
+            }
+        ];
+
+        // --- DOM ELEMENTS ---
+        const starsContainer = document.getElementById('starsContainer');
+        const navbar = document.getElementById('navbar');
+        const heroSection = document.getElementById('hero');
+        const productsSection = document.getElementById('products');
+        const productDetailSection = document.getElementById('productDetail');
+        const productGrid = document.getElementById('productGrid');
+        const categoryFilters = document.getElementById('categoryFilters');
+        const adminButton = document.getElementById('adminButton');
+        const adminPanel = document.getElementById('adminPanel');
+        const addProductForm = document.getElementById('addProductForm');
+        const formMessage = document.getElementById('formMessage');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const cartButton = document.getElementById('cartButton');
+        const cartModal = document.getElementById('cartModal');
+        const cartItemsContainer = document.getElementById('cartItemsContainer');
+        const cartSubtotal = document.getElementById('cartSubtotal');
+        const cartCount = document.getElementById('cartCount');
+
+        // --- FIREBASE INITIALIZATION AND AUTHENTICATION ---
+        async function initFirebase() {
+            try {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                // Authenticate user
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        console.log("Authenticated with user ID:", userId);
+                        
+                        if (initialAuthToken) { 
+                            adminButton.style.display = 'list-item';
+                        }
+                        
+                        // Check and seed products, then start listening
+                        seedInitialProducts().then(setupRealtimeListener);
+                    } else {
+                        console.log("Signed out or anonymous.");
+                        setupRealtimeListener();
+                    }
+                });
+
+            } catch (error) {
+                console.error("Firebase Initialization Error:", error);
+                loadingMessage.textContent = "Error loading products. Check console for details.";
+            }
+        }
+        
+        // --- DATA SEEDING FUNCTION ---
+        async function seedInitialProducts() {
+            if (!db) return;
+            const productsCollectionRef = collection(db, PRODUCTS_COLLECTION_PATH);
+
+            try {
+                const snapshot = await getDocs(query(productsCollectionRef, limit(1)));
+
+                if (snapshot.empty) {
+                    console.log("Database is empty. Seeding initial products...");
+                    
+                    const batchPromises = SAMPLE_PRODUCTS.map(product => 
+                        addDoc(productsCollectionRef, { 
+                            ...product, 
+                            createdAt: serverTimestamp() 
+                        })
+                    );
+                    
+                    await Promise.all(batchPromises);
+                    console.log("Initial products seeded successfully.");
+                } else {
+                    console.log("Products already exist. Skipping seeding.");
+                }
+            } catch (error) {
+                console.error("Error seeding initial data:", error);
+            }
+        }
+
+
+        // --- REALTIME DATA LISTENER ---
+        function setupRealtimeListener() {
+            if (!db) return;
+
+            const q = query(collection(db, PRODUCTS_COLLECTION_PATH));
+            
+            onSnapshot(q, (snapshot) => {
+                allProducts = [];
+                snapshot.forEach((doc) => {
+                    allProducts.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Re-render based on current route/filter after data update
+                handleRouting(); 
+                renderCategories();
+                loadingMessage.style.display = 'none'; 
+            }, (error) => {
+                console.error("Firestore Error:", error);
+                loadingMessage.textContent = "Failed to fetch real-time data.";
+            });
+        }
+        
+        // --- ADMIN FUNCTIONALITY ---
+        if (addProductForm) {
+            addProductForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                if (!db) {
+                    formMessage.textContent = "Database not initialized. Cannot add product.";
+                    return;
+                }
+
+                const title = document.getElementById('productTitle').value;
+                const description = document.getElementById('productDescription').value;
+                const price = parseFloat(document.getElementById('productPrice').value);
+                const category = document.getElementById('productCategory').value;
+                const icon = document.getElementById('productIcon').value;
+
+                try {
+                    await addDoc(collection(db, PRODUCTS_COLLECTION_PATH), {
+                        title,
+                        description,
+                        price,
+                        category,
+                        icon,
+                        createdAt: serverTimestamp()
+                    });
+                    
+                    formMessage.style.color = 'lightgreen';
+                    formMessage.textContent = `${title} added successfully!`;
+                    addProductForm.reset();
+                    
+                } catch (error) {
+                    console.error("Error adding document: ", error);
+                    formMessage.style.color = 'red';
+                    formMessage.textContent = "Error adding product. See console.";
+                }
+            });
+        }
+
+
+        // --- ROUTING / VIEW SWITCHING LOGIC ---
+
+        function showSection(sectionElement) {
+            // Hide all main sections
+            [productsSection, adminPanel, productDetailSection].forEach(el => {
+                if(el) el.style.display = 'none';
+            });
+            
+            // Show the requested section
+            if(sectionElement) {
+                sectionElement.style.display = 'block';
+            }
+        }
+
+        function handleRouting() {
+            const hash = window.location.hash;
+
+            // Handle main views: Products, Admin, Detail
+            if (hash === '' || hash === '#products' || hash === '#hero') {
+                // Products section is the main scrollable content
+                showSection(productsSection);
+                renderProducts(); 
+            } 
+            else if (hash === '#admin') {
+                showSection(adminPanel);
+            }
+            else if (hash.startsWith('#product/')) {
+                const productId = hash.substring(hash.lastIndexOf('/') + 1);
+                renderProductDetail(productId);
+                showSection(productDetailSection);
+            }
+            // Handle standard sections (About, Contact)
+            else if (hash === '#about' || hash === '#contact') {
+                // Let the browser handle the scroll, but ensure the products view is shown
+                showSection(productsSection);
+                const target = document.querySelector(hash);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+            
+            // Ensure cart is closed on route change
+            closeCart();
+            // Scroll to top for non-main content views (Admin, Detail)
+            if (hash === '#admin' || hash.startsWith('#product/')) {
+                 window.scrollTo(0, 0); 
+            }
+        }
+
+        // --- RENDERING FUNCTIONS ---
+        
+        function renderCategories() {
+            const categories = new Set(['All']);
+            allProducts.forEach(p => categories.add(p.category || 'Uncategorized'));
+
+            categoryFilters.innerHTML = '';
+            categories.forEach(cat => {
+                const button = document.createElement('button');
+                button.textContent = cat.toUpperCase();
+                button.className = cat === currentFilter ? 'active' : '';
+                button.onclick = () => {
+                    currentFilter = cat;
+                    renderCategories(); 
+                    renderProducts();
+                };
+                categoryFilters.appendChild(button);
+            });
+        }
+
+        function renderProducts() {
+            const filteredProducts = allProducts.filter(p => 
+                currentFilter === 'All' || 
+                (p.category || 'Uncategorized') === currentFilter
+            );
+
+            productGrid.innerHTML = '';
+
+            if (filteredProducts.length === 0) {
+                productGrid.innerHTML = `<p style="text-align: center; color: rgba(255, 255, 255, 0.5); padding: 5rem;">
+                                            No products found in the "${currentFilter}" category.
+                                         </p>`;
+                return;
+            }
+
+            filteredProducts.forEach(product => {
+                const card = document.createElement('a');
+                // Link to the product detail page for the router to handle
+                card.href = `#product/${product.id}`; 
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-image">${product.icon || '✨'}</div>
+                    <h3 class="product-title">${product.title || 'Untitled Product'}</h3>
+                    <p class="product-description">${product.description || 'No description provided.'}</p>
+                    <div class="product-price">$${(product.price || 0).toFixed(2)}</div>
+                `;
+                productGrid.appendChild(card);
+            });
+        }
+        
+        function renderProductDetail(productId) {
+            const product = allProducts.find(p => p.id === productId);
+            
+            if (!product) {
+                productDetailSection.innerHTML = `<h2 class="section-title">Error</h2><p class="section-subtitle">Product not found.</p><p style="text-align:center; margin-top: 5rem;"><a href="#products" style="color:#fff;">Back to collection</a></p>`;
+                return;
+            }
+
+            productDetailSection.innerHTML = `
+                <div class="detail-container">
+                    <div class="detail-image-box">${product.icon || '✨'}</div>
+                    <div class="detail-info">
+                        <p class="detail-category">${product.category.toUpperCase()}</p>
+                        <h1 class="detail-title">${product.title}</h1>
+                        <div class="detail-price">$${(product.price || 0).toFixed(2)}</div>
+                        <p class="detail-description">${product.description}</p>
+                        <button 
+                            class="primary-button" 
+                            onclick="addToCart('${product.id}', '${product.title}', ${product.price});"
+                        >
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+
+        // --- CART LOGIC ---
+
+        function updateCartUI() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const subtotal = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+
+            cartCount.textContent = totalItems;
+            cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
+            
+            cartItemsContainer.innerHTML = '';
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `<p style="text-align: center; color: rgba(255, 255, 255, 0.6); padding: 2rem 0;">
+                                                    Your cart is empty. The matrix is lonely.
+                                                </p>`;
+                return;
+            }
+
+            cart.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'cart-item';
+                itemDiv.innerHTML = `
+                    <div class="item-info">
+                        <span class="item-title">${item.product.title}</span>
+                        <span class="item-details">Qty: ${item.quantity} @ $${item.product.price.toFixed(2)}</span>
+                    </div>
+                    <div class="item-controls">
+                        <span>$${(item.product.price * item.quantity).toFixed(2)}</span>
+                        <button class="remove-button" onclick="removeFromCart('${item.product.id}')">Remove</button>
+                    </div>
+                `;
+                cartItemsContainer.appendChild(itemDiv);
+            });
+        }
+
+        function addToCart(productId, title, price) {
+            const existingItem = cart.find(item => item.product.id === productId);
+            const product = allProducts.find(p => p.id === productId);
+
+            if (!product) {
+                console.error("Product not found in inventory.");
+                return;
+            }
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    product: { id: productId, title: title, price: price },
+                    quantity: 1
+                });
+            }
+            
+            updateCartUI();
+            openCart(); // Show the cart modal immediately after adding
+        }
+
+        function removeFromCart(productId) {
+            const index = cart.findIndex(item => item.product.id === productId);
+
+            if (index !== -1) {
+                cart[index].quantity -= 1;
+                if (cart[index].quantity <= 0) {
+                    cart.splice(index, 1);
+                }
+            }
+            updateCartUI();
+        }
+        
+        function clearCart() {
+            cart = [];
+            updateCartUI();
+            alertUser("Cart emptied. Ready for a new timeline.");
+        }
+
+        function openCart() {
+            cartModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Prevent scrolling background
+            updateCartUI();
+        }
+
+        function closeCart() {
+            cartModal.style.display = 'none';
+            document.body.style.overflow = 'auto'; 
+        }
+
+        function handleCheckout() {
+             if (cart.length === 0) {
+                alertUser('Your cart is empty. Add some items before checking out.');
+                return;
+            }
+            // Placeholder for a real checkout process
+            alertUser(`Checkout Initiated for $${cartSubtotal.textContent}. This is a simulated transaction.`);
+            clearCart();
+            closeCart();
+        }
+        
+        // Simple custom alert (since window.alert is disallowed)
+        function alertUser(message) {
+            // Check for existing message bar and remove if present to prevent overlap
+            let messageBar = document.getElementById('tempAlertBar');
+            if (messageBar) messageBar.remove();
+
+            messageBar = document.createElement('div');
+            messageBar.id = 'tempAlertBar';
+            messageBar.style.cssText = `
+                position: fixed; top: 0; left: 0; right: 0; 
+                background: #fff; color: #000; padding: 1rem; 
+                text-align: center; z-index: 3000; font-weight: 600;
+                transition: opacity 0.5s;
+            `;
+            messageBar.textContent = message;
+            document.body.appendChild(messageBar);
+            setTimeout(() => {
+                messageBar.style.opacity = '0';
+                setTimeout(() => messageBar.remove(), 500);
+            }, 3000);
+        }
+
+        // --- SCROLL & UI LOGIC ---
+
+        function setupStars() {
+            starsContainer.innerHTML = '';
+            const starCount = window.innerWidth > 768 ? 150 : 80;
+
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            const heroHeight = heroSection ? heroSection.offsetHeight : 0;
+            
+            // Toggle fixed navbar background opacity based on scrolling past the hero section
+            if (scrollY > heroHeight - 80) { // 80px buffer for smooth transition
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Attach cart open/close handlers
+        cartButton.onclick = openCart;
+
+        // Attach admin button logic to routing
+        adminButton.addEventListener('click', () => {
+             window.location.hash = (window.location.hash === '#admin') ? '#products' : '#admin';
+        });
+
+        // Expose critical functions globally for inline HTML/DOM events
+        window.addToCart = addToCart;
+        window.removeFromCart = removeFromCart;
+        window.clearCart = clearCart;
+        window.openCart = openCart;
+        window.closeCart = closeCart;
+        window.handleCheckout = handleCheckout;
+        window.alertUser = alertUser; // Expose the custom alert
+
+        // --- INITIALIZATION ---
+        window.onload = function() {
+            setupStars();
+            initFirebase();
+            // Start listening for hash changes right away
+            window.onhashchange = handleRouting;
+            // Handle initial route
+            handleRouting();
+            window.dispatchEvent(new Event('scroll')); 
+        };
+
+    </script>
+</body>
+</html>
